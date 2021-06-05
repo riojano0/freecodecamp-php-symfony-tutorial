@@ -12,17 +12,17 @@ class MainController extends AbstractController
     #[Route('/', name: 'home')]
     public function index(): Response
     {
-        // return $this->json([
-        //     'message' => 'Welcome to your new controller!',
-        //     'path' => 'src/Controller/MainController.php',
-        // ]);
-
-        return new Response(content:'<h1>Welcome freeCodeCamp</h1>');
+        return $this->render(view:'home/index.html.twig');
     }
 
     #[Route('/custom/{name?}', name: 'custom')]
     public function custom(Request $request): Response {
         $name = $request->get(key:'name');
-        return new Response(content:'<h1>Custom Page '. $name .'!</h2>');
+
+        return $this->render(view:'home/custom.html.twig', parameters: [
+            'name' => $name
+        ]);
     }
+
+
 }
