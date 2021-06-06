@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
+use App\Services\FileUploader;
+use App\Services\Notification;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +29,7 @@ class PostController extends AbstractController {
     }
 
     #[Route('/create', name: 'create')]
-    public function create(Request $request): Response 
+    public function create(Request $request, FileUploader $fileUploader): Response 
     {
 
         $post = new Post();
@@ -42,13 +44,8 @@ class PostController extends AbstractController {
 
             $fileImage = $request->files->get(key:'post')['image'];
             if ($fileImage) {
-                $filename = md5(uniqid()) . '.'. $fileImage ->guessClientExtension();
 
-                $fileImage->move(
-                    $this->getParameter(name:'uploads_dir'),
-                    $filename
-                );
-
+                $filename = $fileUploader->uploadFile($fileImage);
                 $post->setImage($filename);
             }
 
@@ -73,8 +70,9 @@ class PostController extends AbstractController {
     }
 
     #[Route('/show-custom/{id}', name: 'show-custom')]
-    public function showCustom($id, PostRepository $postRepository): Response 
+    public function showCustom($id, PostRepository $postRepository, Notification $notification): Response 
     {
+
         $post = $postRepository->findPostWithCategory($id);
         return $this->render(view:'post/show-custom.html.twig', parameters: [
             'post' => $post[0]
