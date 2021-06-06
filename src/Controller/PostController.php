@@ -39,6 +39,20 @@ class PostController extends AbstractController {
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em =  $this->getDoctrine()->getManager();
+
+            $fileImage = $request->files->get(key:'post')['image'];
+            dump($fileImage);
+            if ($fileImage) {
+                $filename = md5(uniqid()) . '.'. $fileImage ->guessClientExtension();
+
+                $fileImage->move(
+                    $this->getParameter(name:'uploads_dir'),
+                    $filename
+                );
+
+                $post->setImage($filename);
+            }
+
             $em->persist($post);
             $em->flush();
 
