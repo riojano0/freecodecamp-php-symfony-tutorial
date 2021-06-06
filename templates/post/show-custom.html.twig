@@ -4,8 +4,8 @@
 
 {% block body %}
 
-    <h1> {{ post.title }} {{post.id}}  </h1>
-    <h2> Category: {{post.category}} | Category id: {{post.category.id}} </h2>
+    <h1> {{ post.title }} {{post.post_id}}  </h1>
+    <h2> Category: {{post.name}} | Category id: {{post.category_id}} </h2>
     <img src="{{ '/uploads/' ~ post.image }}"/>
 
 {% endblock %}

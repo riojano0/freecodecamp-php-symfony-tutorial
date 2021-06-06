@@ -41,7 +41,6 @@ class PostController extends AbstractController {
             $em =  $this->getDoctrine()->getManager();
 
             $fileImage = $request->files->get(key:'post')['image'];
-            dump($fileImage);
             if ($fileImage) {
                 $filename = md5(uniqid()) . '.'. $fileImage ->guessClientExtension();
 
@@ -68,9 +67,17 @@ class PostController extends AbstractController {
    #[Route('/show/{id}', name: 'show')]
     public function show(Post $post): Response 
     {
-
         return $this->render(view:'post/show.html.twig', parameters: [
             'post' => $post
+        ]);
+    }
+
+    #[Route('/show-custom/{id}', name: 'show-custom')]
+    public function showCustom($id, PostRepository $postRepository): Response 
+    {
+        $post = $postRepository->findPostWithCategory($id);
+        return $this->render(view:'post/show-custom.html.twig', parameters: [
+            'post' => $post[0]
         ]);
     }
 

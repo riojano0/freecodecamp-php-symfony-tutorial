@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Post;
+use App\Entity\Category;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -18,6 +20,9 @@ class PostType extends AbstractType
             ->add(child:'image', type:FileType::class, options: [
                 'mapped' => true,
                 'required' => false
+            ])
+            ->add(child:'category', type:EntityType::class, options: [
+                'class' => Category::class
             ])
             ->add(child:'save', type: SubmitType::class, options:[
                 'attr' => [ 
